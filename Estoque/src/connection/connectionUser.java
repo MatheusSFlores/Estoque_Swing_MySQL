@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public class connectionUser {
 
     private static final String DRIVER = "com.mysql.jdbc.Driver";
-    private static final String URL = "jdbc:mysql://localhost:3306/db_estoque";
+    private static final String URL = "jdbc:mysql://localhost:3306/db_mercados";
     private static final String USER = "root";
     private static final String PASS = "Caroline-2014";
 

@@ -26,11 +26,12 @@ public class EstoqueDAO {
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("INSERT INTO estoque (produto, descricao, quantidade, valor)VALUES (?, ?, ?, ?)");
+            stmt = con.prepareStatement("INSERT INTO estoque (produto, descricao, quantidade, valor, mercado_id)VALUES (?, ?, ?, ?, ?)");
             stmt.setString(1, estoque.getProduto());
             stmt.setString(2, estoque.getDescricao());
             stmt.setInt(3, estoque.getQuantidade());
             stmt.setDouble(4, estoque.getValor());
+            stmt.setInt(5, estoque.getMercado_id());
 
             stmt.executeUpdate();
 
@@ -49,12 +50,13 @@ public class EstoqueDAO {
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("UPDATE estoque SET produto = ? ,descricao = ? ,quantidade = ? ,valor = ? WHERE id = ?");
+            stmt = con.prepareStatement("UPDATE estoque SET produto = ? ,descricao = ? ,quantidade = ? ,valor = ? WHERE id = ? and mercado_id = ?");
             stmt.setString(1, estoque.getProduto());
             stmt.setString(2, estoque.getDescricao());
             stmt.setInt(3, estoque.getQuantidade());
             stmt.setDouble(4, estoque.getValor());
             stmt.setInt(5, estoque.getId());
+            stmt.setInt(6, estoque.getMercado_id());
 
             stmt.executeUpdate();
 
@@ -72,8 +74,9 @@ public class EstoqueDAO {
         PreparedStatement stmt = null;
 
         try {
-            stmt = con.prepareStatement("DELETE FROM estoque WHERE id = ?");
-            stmt.setInt(1, estoque.getId());
+            stmt = con.prepareStatement("DELETE FROM estoque WHERE mercado_id = ? and id = ?");
+            stmt.setInt(1, estoque.getMercado_id());
+            stmt.setInt(2, estoque.getId());
 
             stmt.executeUpdate();
 
@@ -86,7 +89,7 @@ public class EstoqueDAO {
 
     }
 
-    public List<Estoque> read() {
+    public List<Estoque> read(int id) {
 
         Connection con = connectionUser.getConnection();
         PreparedStatement stmt = null;
@@ -95,7 +98,8 @@ public class EstoqueDAO {
         List<Estoque> listEstoque = new ArrayList<>();
 
         try {
-            stmt = con.prepareStatement("SELECT * FROM estoque");
+            stmt = con.prepareStatement("SELECT * FROM estoque WHERE mercado_id = ? ");
+            stmt.setInt(1, id);
             rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -125,7 +129,7 @@ public class EstoqueDAO {
         List<Estoque> dadosEstoque = new ArrayList<>();
 
         try {
-            stmt = con.prepareStatement("SELECT * FROM estoque WHERE produto = ? ");
+            stmt = con.prepareStatement("SELECT * FROM estoque WHERE mercado_id =? ,produto = ? ");
             stmt.setString(1, produto);
             rs = stmt.executeQuery();
             Estoque estoque = new Estoque();
